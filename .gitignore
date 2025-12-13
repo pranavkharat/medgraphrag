@@ -1,0 +1,26 @@
+# --- Python & Virtual Environment ---
+__pycache__/
+*.pyc
+venv/
+.venv/
+env/
+.env
+
+# --- IDE & OS ---
+.vscode/
+.idea/
+.DS_Store
+
+# --- Streamlit ---
+.streamlit/secrets.toml
+
+# --- Project Specific Data ---
+# Ignore raw Kaggle data (Source 95) - users should download this themselves
+data/raw/
+
+# Ignore generated evaluation reports (Source 238)
+data/evaluation/
+
+# Optional: Ignore synthetic data if you want users to generate it themselves
+# (Uncomment below if you DON'T want to push the 750 patients JSON)
+# data/synthetic/

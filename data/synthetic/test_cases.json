@@ -1,0 +1,684 @@
+{
+  "metadata": {
+    "total_tests": 50,
+    "categories": {
+      "direct_interaction": 20,
+      "no_interaction": 10,
+      "polypharmacy": 10,
+      "adversarial": 10
+    }
+  },
+  "test_cases": [
+    {
+      "id": "DIRECT_001",
+      "category": "direct_interaction",
+      "question": "Is it safe to take Physostigmine with Pilocarpine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Pilocarpine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "minor",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_002",
+      "category": "direct_interaction",
+      "question": "Does Physostigmine interact with Darifenacin?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Darifenacin"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_003",
+      "category": "direct_interaction",
+      "question": "Can I combine Physostigmine and Dicyclomine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Dicyclomine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_004",
+      "category": "direct_interaction",
+      "question": "Does Physostigmine interact with Arotinolol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Arotinolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_005",
+      "category": "direct_interaction",
+      "question": "What happens if I take Physostigmine and Atropine together?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Atropine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_006",
+      "category": "direct_interaction",
+      "question": "What happens if I take Physostigmine and Fesoterodine together?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Fesoterodine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_007",
+      "category": "direct_interaction",
+      "question": "Can I combine Physostigmine and Metipranolol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Metipranolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_008",
+      "category": "direct_interaction",
+      "question": "What happens if I take Physostigmine and Umeclidinium together?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Umeclidinium"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_009",
+      "category": "direct_interaction",
+      "question": "Is it safe to take Physostigmine with Mecamylamine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Mecamylamine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_010",
+      "category": "direct_interaction",
+      "question": "What happens if I take Physostigmine and Practolol together?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Practolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_011",
+      "category": "direct_interaction",
+      "question": "Does Physostigmine interact with Desloratadine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Desloratadine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_012",
+      "category": "direct_interaction",
+      "question": "What happens if I take Physostigmine and Benzatropine together?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Benzatropine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_013",
+      "category": "direct_interaction",
+      "question": "Can I combine Physostigmine and Biperiden?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Biperiden"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_014",
+      "category": "direct_interaction",
+      "question": "Can I combine Physostigmine and Acetylcholine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Acetylcholine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "minor",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_015",
+      "category": "direct_interaction",
+      "question": "Is it safe to take Physostigmine with Aclidinium?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Aclidinium"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_016",
+      "category": "direct_interaction",
+      "question": "Is it safe to take Physostigmine with Betaxolol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Betaxolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_017",
+      "category": "direct_interaction",
+      "question": "Can I combine Physostigmine and Orphenadrine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Orphenadrine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_018",
+      "category": "direct_interaction",
+      "question": "What happens if I take Physostigmine and Varenicline together?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Varenicline"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "minor",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_019",
+      "category": "direct_interaction",
+      "question": "What happens if I take Physostigmine and Profenamine together?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Profenamine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "DIRECT_020",
+      "category": "direct_interaction",
+      "question": "Are there any interactions between Physostigmine and Acebutolol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Acebutolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "easy",
+      "notes": "Known interaction from database"
+    },
+    {
+      "id": "NO_INT_001",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Progabide and Thiosulfuric acid?",
+      "drugs_involved": [
+        "Progabide",
+        "Thiosulfuric acid"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_002",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Thiosulfuric acid and Potassium alum?",
+      "drugs_involved": [
+        "Thiosulfuric acid",
+        "Potassium alum"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_003",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Dirithromycin and Silver sulfadiazine?",
+      "drugs_involved": [
+        "Dirithromycin",
+        "Silver sulfadiazine"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_004",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Cefotetan and Ozenoxacin?",
+      "drugs_involved": [
+        "Cefotetan",
+        "Ozenoxacin"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_005",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Doripenem and Cefalotin?",
+      "drugs_involved": [
+        "Doripenem",
+        "Cefalotin"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_006",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Radium Ra 223 dichloride and Silver sulfadiazine?",
+      "drugs_involved": [
+        "Radium Ra 223 dichloride",
+        "Silver sulfadiazine"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_007",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Ozenoxacin and Imipenem?",
+      "drugs_involved": [
+        "Ozenoxacin",
+        "Imipenem"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_008",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Cidofovir and Methionine?",
+      "drugs_involved": [
+        "Cidofovir",
+        "Methionine"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_009",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Radium Ra 223 dichloride and Cefalotin?",
+      "drugs_involved": [
+        "Radium Ra 223 dichloride",
+        "Cefalotin"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "NO_INT_010",
+      "category": "no_interaction",
+      "question": "Is there any interaction between Ceftibuten and Sulfamerazine?",
+      "drugs_involved": [
+        "Ceftibuten",
+        "Sulfamerazine"
+      ],
+      "expected_has_interaction": false,
+      "expected_severity": null,
+      "difficulty": "easy",
+      "notes": "No known interaction in database"
+    },
+    {
+      "id": "MULTI_001",
+      "category": "polypharmacy",
+      "question": "Check for interactions between: Acetylcholine, Varenicline, Methacholine, Enzalutamide, Pancuronium",
+      "drugs_involved": [
+        "Acetylcholine",
+        "Varenicline",
+        "Methacholine",
+        "Enzalutamide",
+        "Pancuronium"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 5 drugs"
+    },
+    {
+      "id": "MULTI_002",
+      "category": "polypharmacy",
+      "question": "Is it safe to combine Dicyclomine, Umeclidinium, Oxybutynin, Bopindolol, Pancuronium?",
+      "drugs_involved": [
+        "Dicyclomine",
+        "Umeclidinium",
+        "Oxybutynin",
+        "Bopindolol",
+        "Pancuronium"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 5 drugs"
+    },
+    {
+      "id": "MULTI_003",
+      "category": "polypharmacy",
+      "question": "Is it safe to combine Profenamine, Orphenadrine, Varenicline, Cyclopentolate?",
+      "drugs_involved": [
+        "Profenamine",
+        "Orphenadrine",
+        "Varenicline",
+        "Cyclopentolate"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 4 drugs"
+    },
+    {
+      "id": "MULTI_004",
+      "category": "polypharmacy",
+      "question": "Is it safe to combine Dicyclomine, Bupranolol, Oxprenolol, Arotinolol?",
+      "drugs_involved": [
+        "Dicyclomine",
+        "Bupranolol",
+        "Oxprenolol",
+        "Arotinolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 4 drugs"
+    },
+    {
+      "id": "MULTI_005",
+      "category": "polypharmacy",
+      "question": "I'm taking Dicyclomine, Bethanechol, Cyclopentolate, Mivacurium and Bupranolol. Are there any interactions?",
+      "drugs_involved": [
+        "Dicyclomine",
+        "Bethanechol",
+        "Cyclopentolate",
+        "Mivacurium",
+        "Bupranolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 5 drugs"
+    },
+    {
+      "id": "MULTI_006",
+      "category": "polypharmacy",
+      "question": "Is it safe to combine Oxybutynin, Celiprolol, Arotinolol, Practolol?",
+      "drugs_involved": [
+        "Oxybutynin",
+        "Celiprolol",
+        "Arotinolol",
+        "Practolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 4 drugs"
+    },
+    {
+      "id": "MULTI_007",
+      "category": "polypharmacy",
+      "question": "I'm taking Physostigmine, Varenicline, Bopindolol and Methacholine. Are there any interactions?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Varenicline",
+        "Bopindolol",
+        "Methacholine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 4 drugs"
+    },
+    {
+      "id": "MULTI_008",
+      "category": "polypharmacy",
+      "question": "I'm taking Practolol, Mivacurium and Enzalutamide. Are there any interactions?",
+      "drugs_involved": [
+        "Practolol",
+        "Mivacurium",
+        "Enzalutamide"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 3 drugs"
+    },
+    {
+      "id": "MULTI_009",
+      "category": "polypharmacy",
+      "question": "Is it safe to combine Cyclopentolate, Oxybutynin, Alprenolol?",
+      "drugs_involved": [
+        "Cyclopentolate",
+        "Oxybutynin",
+        "Alprenolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 3 drugs"
+    },
+    {
+      "id": "MULTI_010",
+      "category": "polypharmacy",
+      "question": "I'm taking Cevimeline, Practolol, Bopindolol and Pilocarpine. Are there any interactions?",
+      "drugs_involved": [
+        "Cevimeline",
+        "Practolol",
+        "Bopindolol",
+        "Pilocarpine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "varies",
+      "difficulty": "hard",
+      "notes": "Multi-drug query with 4 drugs"
+    },
+    {
+      "id": "ADV_001",
+      "category": "adversarial",
+      "question": "Does Physostigmine interact with Cyclopentolate?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Cyclopentolate"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "hard",
+      "notes": "Typo: 'Physostigmine' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_002",
+      "category": "adversarial",
+      "question": "Does physostigmine interact with Acetylcholine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Acetylcholine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "minor",
+      "difficulty": "hard",
+      "notes": "Typo: 'physostigmine' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_003",
+      "category": "adversarial",
+      "question": "Does physostigmine interact with Methacholine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Methacholine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "minor",
+      "difficulty": "hard",
+      "notes": "Typo: 'physostigmine' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_004",
+      "category": "adversarial",
+      "question": "Does physostigmine interact with Carbamoylcholine?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Carbamoylcholine"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "minor",
+      "difficulty": "hard",
+      "notes": "Typo: 'physostigmine' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_005",
+      "category": "adversarial",
+      "question": "Does Physostegmine interact with Bethanechol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Bethanechol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "minor",
+      "difficulty": "hard",
+      "notes": "Typo: 'Physostegmine' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_006",
+      "category": "adversarial",
+      "question": "Does Physostigmin interact with Varenicline?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Varenicline"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "minor",
+      "difficulty": "hard",
+      "notes": "Typo: 'Physostigmin' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_007",
+      "category": "adversarial",
+      "question": "Does physostigmine interact with Arotinolol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Arotinolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "hard",
+      "notes": "Typo: 'physostigmine' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_008",
+      "category": "adversarial",
+      "question": "Does Physostigmin interact with Practolol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Practolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "hard",
+      "notes": "Typo: 'Physostigmin' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_009",
+      "category": "adversarial",
+      "question": "Does Physostegmine interact with Bopindolol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Bopindolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "hard",
+      "notes": "Typo: 'Physostegmine' should be 'Physostigmine'"
+    },
+    {
+      "id": "ADV_010",
+      "category": "adversarial",
+      "question": "Does Physostigminee interact with Bevantolol?",
+      "drugs_involved": [
+        "Physostigmine",
+        "Bevantolol"
+      ],
+      "expected_has_interaction": true,
+      "expected_severity": "moderate",
+      "difficulty": "hard",
+      "notes": "Typo: 'Physostigminee' should be 'Physostigmine'"
+    }
+  ]
+}

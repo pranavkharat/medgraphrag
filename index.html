@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedGraphRAG - AI-Powered Medication Safety System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --secondary: #ec4899;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0a0a0f;
+            --dark-secondary: #12121a;
+            --dark-tertiary: #1a1a24;
+            --gray-900: #18181b;
+            --gray-800: #27272a;
+            --gray-700: #3f3f46;
+            --gray-600: #52525b;
+            --gray-500: #71717a;
+            --gray-400: #a1a1aa;
+            --gray-300: #d4d4d8;
+            --white: #fafafa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark);
+            color: var(--white);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            z-index: -1;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        .gradient-blur {
+            position: fixed;
+            width: 50vw;
+            height: 50vw;
+            border-radius: 50%;
+            filter: blur(150px);
+            opacity: 0.12;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .gradient-blur-1 {
+            top: -20%;
+            right: -10%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            animation: pulse1 15s ease-in-out infinite;
+        }
+
+        .gradient-blur-2 {
+            bottom: -20%;
+            left: -10%;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+            animation: pulse2 18s ease-in-out infinite;
+        }
+
+        @keyframes pulse1 {
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.12; }
+            50% { transform: scale(1.1) translate(-30px, 30px); opacity: 0.18; }
+        }
+
+        @keyframes pulse2 {
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.12; }
+            50% { transform: scale(1.15) translate(30px, -30px); opacity: 0.15; }
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1rem 2rem;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo-pill {
+            font-size: 1.75rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--gray-400);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--white);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--white);
+            color: var(--dark);
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 4rem 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 4rem;
+        }
+
+        .hero-content {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(236, 72, 153, 0.15) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            color: var(--primary-light);
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            letter-spacing: -0.03em;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--secondary) 50%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-400);
+            margin-bottom: 2.5rem;
+            max-width: 500px;
+            line-height: 1.8;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 1rem 1.75rem;
+            border-radius: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--white);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.25);
+            transform: translateY(-3px);
+        }
+
+        .hero-visual {
+            flex: 1.2;
+            position: relative;
+        }
+
+        .hero-screenshot {
+            width: 100%;
+            border-radius: 16px;
+            box-shadow: 
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                0 50px 100px -20px rgba(0, 0, 0, 0.8),
+                0 30px 60px -30px rgba(99, 102, 241, 0.3);
+            transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+            transition: transform 0.5s ease;
+        }
+
+        .hero-screenshot:hover {
+            transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+        }
+
+        .hero-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(ellipse at center, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: var(--dark-secondary);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 3rem 2rem;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--white) 0%, var(--gray-400) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-top: 0.25rem;
+        }
+
+        /* Section Styling */
+        section {
+            padding: 7rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary-light);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 2.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .section-subtitle {
+            color: var(--gray-400);
+            font-size: 1.15rem;
+            max-width: 600px;
+            margin-bottom: 3.5rem;
+        }
+
+        /* Problem/Solution */
+        .problem-solution {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .ps-card {
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .ps-card.problem {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.02) 100%);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .ps-card.solution {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(16, 185, 129, 0.02) 100%);
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .ps-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.35rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .ps-card.problem h3 { color: var(--danger); }
+        .ps-card.solution h3 { color: var(--success); }
+
+        .ps-card ul {
+            list-style: none;
+            color: var(--gray-300);
+        }
+
+        .ps-card li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .ps-card.problem li::before {
+            content: '✗';
+            position: absolute;
+            left: 0;
+            color: var(--danger);
+            font-weight: bold;
+        }
+
+        .ps-card.solution li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .feature-card {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(99, 102, 241, 0.3);
+            background: var(--dark-tertiary);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-icon.purple { background: rgba(99, 102, 241, 0.15); color: var(--primary-light); }
+        .feature-icon.pink { background: rgba(236, 72, 153, 0.15); color: var(--secondary); }
+        .feature-icon.cyan { background: rgba(6, 182, 212, 0.15); color: var(--accent); }
+        .feature-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+        .feature-icon.orange { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .feature-icon.red { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+
+        .feature-card h3 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--gray-400);
+            font-size: 0.92rem;
+            line-height: 1.7;
+        }
+
+        /* Architecture */
+        .architecture-container {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 2rem;
+        }
+
+        .arch-svg {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 2rem;
+            display: block;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .tech-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--dark-tertiary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.6rem 1.25rem;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .tech-badge:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .tech-badge i {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        /* Code Showcase */
+        .code-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .code-block {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            background: var(--dark-tertiary);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .code-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .code-dot.red { background: #ff5f57; }
+        .code-dot.yellow { background: #febc2e; }
+        .code-dot.green { background: #28c840; }
+
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--gray-400);
+        }
+
+        .code-content {
+            padding: 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            line-height: 1.8;
+            overflow-x: auto;
+            color: var(--gray-300);
+        }
+
+        .code-content .comment { color: var(--gray-600); }
+        .code-content .keyword { color: var(--secondary); }
+        .code-content .function { color: var(--accent); }
+        .code-content .string { color: var(--success); }
+        .code-content .number { color: var(--warning); }
+        .code-content .variable { color: var(--primary-light); }
+
+        /* Interview Section */
+        .interview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .interview-card {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .interview-card .question {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            color: var(--gray-400);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .interview-card .question i {
+            color: var(--primary-light);
+            margin-top: 0.2rem;
+        }
+
+        .interview-card .answer {
+            color: var(--gray-300);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            padding-left: 1.75rem;
+            border-left: 2px solid var(--primary);
+        }
+
+        /* Clinical Scenarios */
+        .scenarios-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .scenario-card {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .scenario-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scenario-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .scenario-icon.critical {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .scenario-icon.low {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .scenario-badge {
+            padding: 0.35rem 0.85rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .scenario-badge.critical {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .scenario-badge.low {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .scenario-patient {
+            color: var(--gray-400);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            padding: 1rem;
+            background: var(--dark-tertiary);
+            border-radius: 10px;
+        }
+
+        .scenario-patient strong {
+            color: var(--gray-300);
+        }
+
+        .scenario-analysis {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .risk-score {
+            text-align: center;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            min-width: 90px;
+        }
+
+        .risk-score.critical {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .risk-score.low {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .risk-score .score-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .risk-score.critical .score-value { color: var(--danger); }
+        .risk-score.low .score-value { color: var(--success); }
+
+        .risk-score .score-label {
+            font-size: 0.7rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .risk-breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .risk-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--gray-400);
+        }
+
+        .risk-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .risk-dot.major { background: var(--danger); }
+        .risk-dot.moderate { background: var(--warning); }
+        .risk-dot.multiplier { background: var(--primary-light); }
+
+        .scenario-alert, .scenario-summary {
+            display: flex;
+            gap: 0.75rem;
+            padding: 1rem;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .scenario-alert {
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            color: var(--gray-300);
+        }
+
+        .scenario-alert i { color: var(--danger); margin-top: 0.15rem; }
+
+        .scenario-summary {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            color: var(--gray-300);
+        }
+
+        .scenario-summary i { color: var(--success); margin-top: 0.15rem; }
+
+        .scenario-insight {
+            display: flex;
+            gap: 1.25rem;
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 16px;
+        }
+
+        .insight-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(99, 102, 241, 0.15);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-light);
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .insight-content {
+            color: var(--gray-300);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .insight-content strong {
+            color: var(--white);
+        }
+
+        /* Technology Decisions */
+        .tech-decisions-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .tech-decision-card {
+            background: var(--dark-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .tech-decision-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .tech-decision-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .tech-decision-icon.neo4j {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+        }
+
+        .tech-decision-icon.ollama {
+            background: rgba(236, 72, 153, 0.15);
+            color: var(--secondary);
+        }
+
+        .tech-decision-icon.synthetic {
+            background: rgba(6, 182, 212, 0.15);
+            color: var(--accent);
+        }
+
+        .tech-decision-icon.pyvis {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .tech-decision-header h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .tech-decision-rationale {
+            color: var(--gray-400);
+            font-size: 0.9rem;
+            line-height: 1.75;
+        }
+
+        .tech-decision-rationale p {
+            margin-bottom: 0.75rem;
+        }
+
+        .tech-decision-rationale p:last-child {
+            margin-bottom: 0;
+        }
+
+        .rationale-lead {
+            color: var(--gray-300);
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .tech-decision-rationale em {
+            color: var(--gray-300);
+            font-style: italic;
+        }
+
+        .tech-decision-tradeoff {
+            padding: 1rem;
+            background: var(--dark-tertiary);
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--gray-400);
+            border-left: 3px solid var(--gray-600);
+        }
+
+        .tech-decision-tradeoff strong {
+            color: var(--gray-300);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .cta-container {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(236, 72, 153, 0.1) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 24px;
+            padding: 4rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-container h2 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        .cta-container p {
+            color: var(--gray-400);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--gray-400);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-credit {
+            color: var(--gray-600);
+            font-size: 0.85rem;
+        }
+
+        .footer-credit strong {
+            color: var(--gray-400);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 7rem 2rem 4rem;
+            }
+
+            .hero h1 { font-size: 3.25rem; }
+            .hero-subtitle { margin: 0 auto 2.5rem; }
+            .hero-buttons { justify-content: center; }
+
+            .hero-screenshot {
+                transform: none;
+            }
+
+            .features-grid,
+            .interview-grid,
+            .code-showcase,
+            .problem-solution {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2rem; }
+            .stat-value { font-size: 2.5rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-noise"></div>
+    <div class="gradient-blur gradient-blur-1"></div>
+    <div class="gradient-blur gradient-blur-2"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">
+            <span class="logo-pill">💊</span>
+            <span>MedGraphRAG</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#architecture">Architecture</a></li>
+            <li><a href="#code">Code</a></li>
+            <li><a href="#interview">For Recruiters</a></li>
+        </ul>
+        <a href="https://github.com/pranavkharat/medgraphrag" class="nav-cta" target="_blank">
+            <i class="fab fa-github"></i> View Code
+        </a>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <i class="fas fa-graduation-cap"></i>
+                Northeastern University • MS Capstone Project
+            </div>
+            <h1>
+                <span class="gradient-text">Patient-Centered</span><br>
+                Drug Interaction<br>
+                Analysis
+            </h1>
+            <p class="hero-subtitle">
+                A clinical decision support system using custom GraphRAG, 
+                personalized risk scoring, and LLM-powered explanations. 
+                Not a simple lookup tool — real patient safety intelligence.
+            </p>
+            <div class="hero-buttons">
+                <a href="https://github.com/pranavkharat/medgraphrag" class="btn btn-primary" target="_blank">
+                    <i class="fab fa-github"></i> Source Code
+                </a>
+                <a href="#architecture" class="btn btn-ghost">
+                    <i class="fas fa-sitemap"></i> See Architecture
+                </a>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="hero-glow"></div>
+            <img src="https://raw.githubusercontent.com/pranavkharat/medgraphrag/main/docs/screenshot.png" 
+                 alt="MedGraphRAG Dashboard" 
+                 class="hero-screenshot"
+                 onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 500%22%3E%3Crect fill=%22%231a1a24%22 width=%22800%22 height=%22500%22/%3E%3Ctext x=%22400%22 y=%22250%22 fill=%22%236366f1%22 font-family=%22Inter%22 font-size=%2220%22 text-anchor=%22middle%22%3EMedGraphRAG Dashboard%3C/text%3E%3C/svg%3E'">
+        </div>
+    </section>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+        <div class="stats-grid">
+            <div class="stat-item">
+                <div class="stat-value">1,701</div>
+                <div class="stat-label">Drugs in Knowledge Graph</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">191K+</div>
+                <div class="stat-label">Drug Interactions Mapped</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">752</div>
+                <div class="stat-label">Synthetic Patient Profiles</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">86%</div>
+                <div class="stat-label">Query Accuracy</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem / Solution -->
+    <section>
+        <span class="section-label"><i class="fas fa-lightbulb"></i> The Problem</span>
+        <h2 class="section-title">Why This Project Exists</h2>
+        <p class="section-subtitle">
+            Drug interactions are complex. Existing tools treat every patient the same — 
+            but a medication that's safe for one person can be dangerous for another.
+        </p>
+        <div class="problem-solution">
+            <div class="ps-card problem">
+                <h3><i class="fas fa-times-circle"></i> Typical Drug Lookup Tools</h3>
+                <ul>
+                    <li>Single drug queries only — no multi-drug analysis</li>
+                    <li>Same warnings for everyone regardless of age or conditions</li>
+                    <li>Raw database output with medical jargon</li>
+                    <li>No visualization of interaction networks</li>
+                    <li>Crashes or returns nothing on ambiguous queries</li>
+                </ul>
+            </div>
+            <div class="ps-card solution">
+                <h3><i class="fas fa-check-circle"></i> MedGraphRAG Approach</h3>
+                <ul>
+                    <li>Polypharmacy analysis — check all your medications at once</li>
+                    <li>Risk scores adjusted for age, kidney/liver function, pregnancy</li>
+                    <li>LLM-generated plain-English explanations</li>
+                    <li>Interactive PyVis graph visualization</li>
+                    <li>Self-healing queries with 3-retry recovery</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features">
+        <span class="section-label"><i class="fas fa-cube"></i> Core Features</span>
+        <h2 class="section-title">What Makes This Different</h2>
+        <p class="section-subtitle">
+            Built from scratch with custom components — not a wrapper around existing RAG frameworks.
+        </p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon purple"><i class="fas fa-project-diagram"></i></div>
+                <h3>Custom GraphRAG Engine</h3>
+                <p>Direct Neo4j integration with hand-crafted Cypher queries. Not LlamaIndex, not Microsoft GraphRAG — purpose-built for drug interaction traversal.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon pink"><i class="fas fa-user-injured"></i></div>
+                <h3>Patient Personalization</h3>
+                <p>Multiplicative risk model: age ≥80 = 1.6×, kidney failure = 2.0×, polypharmacy = 1.5×. A 92-year-old gets different advice than a healthy 30-year-old.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon cyan"><i class="fas fa-brain"></i></div>
+                <h3>Text-to-Cypher + Self-Healing</h3>
+                <p>Few-shot prompting converts natural language → graph queries. When a query fails, the system extracts the error and auto-repairs (up to 3 retries).</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon green"><i class="fas fa-comment-medical"></i></div>
+                <h3>LLM Explanations</h3>
+                <p>"This medication helps lower your blood pressure by relaxing blood vessels" — not medical jargon. Context-aware summaries for patients and clinicians.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon orange"><i class="fas fa-network-wired"></i></div>
+                <h3>Interactive Visualization</h3>
+                <p>PyVis-powered graph networks. Color-coded by severity (red = major, yellow = moderate, green = minor). See your medication web at a glance.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon red"><i class="fas fa-shield-alt"></i></div>
+                <h3>Allergy Cross-Checking</h3>
+                <p>Drug class awareness: allergic to Penicillin? The system flags Amoxicillin too. Cross-references patient allergy history against prescribed medications.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture -->
+    <section id="architecture">
+        <span class="section-label"><i class="fas fa-sitemap"></i> System Design</span>
+        <h2 class="section-title">Technical Architecture</h2>
+        <p class="section-subtitle">
+            A multi-component system designed for accuracy, explainability, and clinical safety.
+        </p>
+        <div class="architecture-container">
+            <svg class="arch-svg" viewBox="0 0 900 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- UI Layer -->
+                <rect x="50" y="20" width="800" height="60" rx="12" fill="#1a1a24" stroke="#6366f1" stroke-width="2"/>
+                <text x="450" y="45" fill="#fff" font-family="Inter" font-size="14" font-weight="600" text-anchor="middle">Streamlit UI — 6 Tabs</text>
+                <text x="450" y="65" fill="#71717a" font-family="Inter" font-size="11" text-anchor="middle">Patient Analysis | Quick Check | Natural Language | Search | Two Drugs | Browse</text>
+                
+                <!-- Arrows from UI -->
+                <path d="M200 80 L200 120" stroke="#3f3f46" stroke-width="2" marker-end="url(#arrow)"/>
+                <path d="M450 80 L450 120" stroke="#3f3f46" stroke-width="2" marker-end="url(#arrow)"/>
+                <path d="M700 80 L700 120" stroke="#3f3f46" stroke-width="2" marker-end="url(#arrow)"/>
+                
+                <!-- Middle Layer Components -->
+                <rect x="50" y="120" width="220" height="90" rx="12" fill="#1a1a24" stroke="#ec4899" stroke-width="2"/>
+                <text x="160" y="150" fill="#ec4899" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle">Patient Database</text>
+                <text x="160" y="170" fill="#71717a" font-family="Inter" font-size="10" text-anchor="middle">752 Synthetic Profiles</text>
+                <text x="160" y="190" fill="#71717a" font-family="Inter" font-size="10" text-anchor="middle">Demographics • Conditions • Meds</text>
+                
+                <rect x="340" y="120" width="220" height="90" rx="12" fill="#1a1a24" stroke="#06b6d4" stroke-width="2"/>
+                <text x="450" y="150" fill="#06b6d4" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle">Text-to-Cypher Engine</text>
+                <text x="450" y="170" fill="#71717a" font-family="Inter" font-size="10" text-anchor="middle">Few-Shot Prompting</text>
+                <text x="450" y="190" fill="#71717a" font-family="Inter" font-size="10" text-anchor="middle">Self-Healing • 3 Retries</text>
+                
+                <rect x="630" y="120" width="220" height="90" rx="12" fill="#1a1a24" stroke="#10b981" stroke-width="2"/>
+                <text x="740" y="150" fill="#10b981" font-family="Inter" font-size="12" font-weight="600" text-anchor="middle">Polypharmacy Analyzer</text>
+                <text x="740" y="170" fill="#71717a" font-family="Inter" font-size="10" text-anchor="middle">Risk Scoring (0-100)</text>
+                <text x="740" y="190" fill="#71717a" font-family="Inter" font-size="10" text-anchor="middle">Patient Multipliers • Allergies</text>
+                
+                <!-- Arrow to Neo4j -->
+                <path d="M450 210 L450 250" stroke="#3f3f46" stroke-width="2" marker-end="url(#arrow)"/>
+                
+                <!-- Neo4j Layer -->
+                <rect x="150" y="250" width="600" height="70" rx="12" fill="#1a1a24" stroke="#6366f1" stroke-width="2"/>
+                <text x="450" y="280" fill="#6366f1" font-family="Inter" font-size="14" font-weight="700" text-anchor="middle">Neo4j Knowledge Graph</text>
+                <text x="450" y="300" fill="#a1a1aa" font-family="Inter" font-size="12" text-anchor="middle">1,701 Drugs  •  191,252 Interactions  •  Severity Classifications</text>
+                
+                <!-- Bottom outputs -->
+                <path d="M250 320 L250 360" stroke="#3f3f46" stroke-width="2" marker-end="url(#arrow)"/>
+                <path d="M450 320 L450 360" stroke="#3f3f46" stroke-width="2" marker-end="url(#arrow)"/>
+                <path d="M650 320 L650 360" stroke="#3f3f46" stroke-width="2" marker-end="url(#arrow)"/>
+                
+                <rect x="150" y="360" width="140" height="35" rx="8" fill="#f59e0b20" stroke="#f59e0b" stroke-width="1"/>
+                <text x="220" y="382" fill="#f59e0b" font-family="Inter" font-size="11" font-weight="500" text-anchor="middle">PyVis Graphs</text>
+                
+                <rect x="380" y="360" width="140" height="35" rx="8" fill="#818cf820" stroke="#818cf8" stroke-width="1"/>
+                <text x="450" y="382" fill="#818cf8" font-family="Inter" font-size="11" font-weight="500" text-anchor="middle">Ollama LLM</text>
+                
+                <rect x="610" y="360" width="140" height="35" rx="8" fill="#ef444420" stroke="#ef4444" stroke-width="1"/>
+                <text x="680" y="382" fill="#ef4444" font-family="Inter" font-size="11" font-weight="500" text-anchor="middle">Risk Scores</text>
+                
+                <!-- Arrow marker definition -->
+                <defs>
+                    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                        <path d="M0,0 L0,6 L9,3 z" fill="#3f3f46"/>
+                    </marker>
+                </defs>
+            </svg>
+            
+            <div class="tech-stack">
+                <div class="tech-badge"><i class="fas fa-database"></i> Neo4j 5.x</div>
+                <div class="tech-badge"><i class="fas fa-brain"></i> Ollama + Llama 3.2</div>
+                <div class="tech-badge"><i class="fas fa-link"></i> LangChain</div>
+                <div class="tech-badge"><i class="fas fa-chart-network"></i> PyVis</div>
+                <div class="tech-badge"><i class="fab fa-python"></i> Python 3.11</div>
+                <div class="tech-badge"><i class="fas fa-window-maximize"></i> Streamlit</div>
+                <div class="tech-badge"><i class="fab fa-docker"></i> Docker</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Showcase -->
+    <section id="code">
+        <span class="section-label"><i class="fas fa-code"></i> Implementation</span>
+        <h2 class="section-title">Key Code Patterns</h2>
+        <p class="section-subtitle">
+            Technical implementations that demonstrate senior-level engineering patterns.
+        </p>
+        <div class="code-showcase">
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <span class="code-title">polypharmacy_analyzer.py</span>
+                </div>
+                <div class="code-content">
+<span class="comment"># Multiplicative risk scoring with patient factors</span>
+<span class="keyword">def</span> <span class="function">calculate_personalized_risk</span>(self, patient, interactions):
+    base = (<span class="variable">major</span> * <span class="number">10</span>) + (<span class="variable">moderate</span> * <span class="number">5</span>) + (<span class="variable">minor</span> * <span class="number">1</span>)
+    multiplier = <span class="number">1.0</span>
+    
+    <span class="keyword">if</span> patient.age >= <span class="number">80</span>:
+        multiplier *= <span class="number">1.6</span>  <span class="comment"># Elderly metabolism</span>
+    <span class="keyword">if</span> patient.renal_function == <span class="string">"failure"</span>:
+        multiplier *= <span class="number">2.0</span>  <span class="comment"># Drug clearance</span>
+    <span class="keyword">if</span> patient.hepatic_function == <span class="string">"severe"</span>:
+        multiplier *= <span class="number">1.4</span>  <span class="comment"># Metabolism</span>
+    <span class="keyword">if</span> len(patient.medications) >= <span class="number">10</span>:
+        multiplier *= <span class="number">1.5</span>  <span class="comment"># Polypharmacy</span>
+        
+    <span class="keyword">return</span> min(base * multiplier, <span class="number">100</span>)
+                </div>
+            </div>
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="code-dots">
+                        <div class="code-dot red"></div>
+                        <div class="code-dot yellow"></div>
+                        <div class="code-dot green"></div>
+                    </div>
+                    <span class="code-title">text_to_cypher.py</span>
+                </div>
+                <div class="code-content">
+<span class="comment"># Self-healing query with retry logic</span>
+<span class="keyword">def</span> <span class="function">execute_with_retry</span>(self, query, max_retries=<span class="number">3</span>):
+    <span class="keyword">for</span> attempt <span class="keyword">in</span> range(max_retries):
+        <span class="keyword">try</span>:
+            cypher = self.<span class="function">generate_cypher</span>(query)
+            result = self.graph.<span class="function">run</span>(cypher)
+            <span class="keyword">return</span> result
+        <span class="keyword">except</span> CypherSyntaxError <span class="keyword">as</span> e:
+            <span class="comment"># Extract error, feed back to LLM</span>
+            cypher = self.<span class="function">repair_query</span>(
+                original=cypher,
+                error=str(e),
+                schema=self.schema
+            )
+    <span class="keyword">raise</span> QueryFailedException(query)
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technology Decisions -->
+    <section id="interview">
+        <span class="section-label"><i class="fas fa-cogs"></i> Engineering Decisions</span>
+        <h2 class="section-title">Why These Technologies</h2>
+        <p class="section-subtitle">
+            Every architectural choice was driven by the specific requirements of clinical decision support — not convention.
+        </p>
+        <div class="tech-decisions-grid">
+            <div class="tech-decision-card">
+                <div class="tech-decision-header">
+                    <div class="tech-decision-icon neo4j"><i class="fas fa-project-diagram"></i></div>
+                    <h3>Neo4j over Vector Databases</h3>
+                </div>
+                <div class="tech-decision-rationale">
+                    <p class="rationale-lead">Drug interactions are fundamentally relational, not semantic.</p>
+                    <p>Vector embeddings excel at semantic similarity — finding documents that "mean" similar things. But drug interactions require structural reasoning: <em>Drug A inhibits Enzyme CYP3A4, which metabolizes Drug B, leading to toxic accumulation.</em></p>
+                    <p>This is a graph traversal problem. Neo4j allows multi-hop queries that follow these biochemical pathways. A vector database would surface "similar" drugs but miss the causal chain that creates the actual clinical risk.</p>
+                </div>
+                <div class="tech-decision-tradeoff">
+                    <strong>Trade-off acknowledged:</strong> Graph databases require explicit schema design and don't handle unstructured queries as gracefully. I mitigated this with the Text-to-Cypher layer.
+                </div>
+            </div>
+            <div class="tech-decision-card">
+                <div class="tech-decision-header">
+                    <div class="tech-decision-icon ollama"><i class="fas fa-microchip"></i></div>
+                    <h3>Local LLM (Ollama) over Cloud APIs</h3>
+                </div>
+                <div class="tech-decision-rationale">
+                    <p class="rationale-lead">Healthcare data demands privacy-first architecture.</p>
+                    <p>Sending patient medication lists to external APIs — even for query generation — creates compliance and privacy concerns. Ollama with Llama 3.2 runs entirely on-device, ensuring patient context never leaves the local environment.</p>
+                    <p>The 3B parameter model was specifically chosen after benchmarking: it provides sufficient reasoning capability for Cypher generation while fitting in 8GB VRAM with Metal acceleration on macOS.</p>
+                </div>
+                <div class="tech-decision-tradeoff">
+                    <strong>Trade-off acknowledged:</strong> Smaller models have lower accuracy ceiling than GPT-4. The self-healing retry mechanism compensates — if the first query fails, the error feedback loop typically recovers within 3 attempts.
+                </div>
+            </div>
+            <div class="tech-decision-card">
+                <div class="tech-decision-header">
+                    <div class="tech-decision-icon synthetic"><i class="fas fa-users-cog"></i></div>
+                    <h3>Synthetic Data Generation</h3>
+                </div>
+                <div class="tech-decision-rationale">
+                    <p class="rationale-lead">Real patient data is inaccessible, but realistic testing is non-negotiable.</p>
+                    <p>Clinical decision support systems fail in production when they encounter edge cases: elderly patients on 12+ medications, rare drug combinations, or unusual comorbidity patterns. Testing against synthetic "happy path" data masks these failures.</p>
+                    <p>The generator creates correlated patient profiles — elderly patients probabilistically have more chronic conditions, which leads to more medications, which correlates with reduced organ function. This mimics real population distributions.</p>
+                </div>
+                <div class="tech-decision-tradeoff">
+                    <strong>Trade-off acknowledged:</strong> Synthetic data can't capture true clinical complexity. The 752 profiles serve as a stress test, not a substitute for real-world validation.
+                </div>
+            </div>
+            <div class="tech-decision-card">
+                <div class="tech-decision-header">
+                    <div class="tech-decision-icon pyvis"><i class="fas fa-network-wired"></i></div>
+                    <h3>PyVis for Visualization</h3>
+                </div>
+                <div class="tech-decision-rationale">
+                    <p class="rationale-lead">Interaction networks are inherently visual — tables fail to communicate risk topology.</p>
+                    <p>When a patient takes 8 medications, there are potentially 28 pairwise interactions. A table listing these is cognitively overwhelming. A force-directed graph immediately reveals the "hub" drugs that interact with everything, and clusters of related risks.</p>
+                    <p>PyVis was chosen over D3.js for development velocity — it integrates directly with Python/Streamlit without requiring a JavaScript build pipeline. The interactive physics simulation runs client-side.</p>
+                </div>
+                <div class="tech-decision-tradeoff">
+                    <strong>Trade-off acknowledged:</strong> PyVis has limited customization compared to D3. For production, I'd consider migrating to a React-based graph library for finer control over styling and interaction.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Clinical Scenarios -->
+    <section>
+        <span class="section-label"><i class="fas fa-heartbeat"></i> Real-World Impact</span>
+        <h2 class="section-title">Clinical Scenarios in Action</h2>
+        <p class="section-subtitle">
+            See how MedGraphRAG transforms patient safety decisions with personalized, context-aware analysis.
+        </p>
+        <div class="scenarios-grid">
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <div class="scenario-icon critical"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="scenario-badge critical">Critical Risk Detected</div>
+                </div>
+                <div class="scenario-patient">
+                    <strong>Patient:</strong> Margaret, 78 years old<br>
+                    <strong>Conditions:</strong> Hypertension, Type 2 Diabetes, Chronic Kidney Disease (Stage 4)<br>
+                    <strong>Current Medications:</strong> Lisinopril, Metformin, Warfarin, Ibuprofen
+                </div>
+                <div class="scenario-analysis">
+                    <div class="risk-score critical">
+                        <span class="score-value">87</span>
+                        <span class="score-label">Risk Score</span>
+                    </div>
+                    <div class="risk-breakdown">
+                        <div class="risk-item"><span class="risk-dot major"></span> 2 Major Interactions</div>
+                        <div class="risk-item"><span class="risk-dot moderate"></span> 3 Moderate Interactions</div>
+                        <div class="risk-item"><span class="risk-dot multiplier"></span> 3.2× Patient Multiplier</div>
+                    </div>
+                </div>
+                <div class="scenario-alert">
+                    <i class="fas fa-bell"></i>
+                    <span><strong>Alert:</strong> Ibuprofen + Warfarin increases bleeding risk. With reduced kidney function (eGFR: 22), drug clearance is significantly impaired. Recommend immediate medication review.</span>
+                </div>
+            </div>
+            <div class="scenario-card">
+                <div class="scenario-header">
+                    <div class="scenario-icon low"><i class="fas fa-shield-alt"></i></div>
+                    <div class="scenario-badge low">Low Risk Profile</div>
+                </div>
+                <div class="scenario-patient">
+                    <strong>Patient:</strong> James, 34 years old<br>
+                    <strong>Conditions:</strong> Seasonal Allergies<br>
+                    <strong>Current Medications:</strong> Cetirizine, Fluticasone
+                </div>
+                <div class="scenario-analysis">
+                    <div class="risk-score low">
+                        <span class="score-value">8</span>
+                        <span class="score-label">Risk Score</span>
+                    </div>
+                    <div class="risk-breakdown">
+                        <div class="risk-item"><span class="risk-dot major"></span> 0 Major Interactions</div>
+                        <div class="risk-item"><span class="risk-dot moderate"></span> 0 Moderate Interactions</div>
+                        <div class="risk-item"><span class="risk-dot multiplier"></span> 1.0× Patient Multiplier</div>
+                    </div>
+                </div>
+                <div class="scenario-summary">
+                    <i class="fas fa-check-circle"></i>
+                    <span>No significant interactions detected. Medications are appropriate for patient profile. Normal kidney and liver function — standard dosing applies.</span>
+                </div>
+            </div>
+        </div>
+        <div class="scenario-insight">
+            <div class="insight-icon"><i class="fas fa-lightbulb"></i></div>
+            <div class="insight-content">
+                <strong>The Difference:</strong> Both patients could be taking common medications. Traditional lookup tools would show the same warnings for both. MedGraphRAG understands that Margaret's age (1.5×), kidney disease (1.8×), and polypharmacy (1.2×) compound her risk — turning a moderate interaction into a critical alert.
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <div class="cta-container">
+            <h2>Explore the Full Implementation</h2>
+            <p>All code is open source. Clone it, run it locally, or reach out to discuss the architecture.</p>
+            <div class="cta-buttons">
+                <a href="https://github.com/pranavkharat/medgraphrag" class="btn btn-primary" target="_blank">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+                <a href="https://linkedin.com/in/pranavkharat" class="btn btn-ghost" target="_blank">
+                    <i class="fab fa-linkedin"></i> Connect on LinkedIn
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="https://github.com/pranavkharat/medgraphrag" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://linkedin.com/in/pranavkharat" target="_blank">
+                <i class="fab fa-linkedin"></i> LinkedIn
+            </a>
+        </div>
+        <p class="footer-credit">
+            Built by <strong>Pranav Kharat</strong> • Northeastern University • December 2024
+        </p>
+        <p class="footer-credit" style="margin-top: 0.5rem; font-size: 0.8rem;">
+            ⚠️ Educational project only. Always consult healthcare professionals for medical advice.
+        </p>
+    </footer>
+</body>
+</html>
