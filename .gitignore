@@ -24,3 +24,5 @@ data/evaluation/
 # Optional: Ignore synthetic data if you want users to generate it themselves
 # (Uncomment below if you DON'T want to push the 750 patients JSON)
 # data/synthetic/
+
+DOCUMENTATION.md
