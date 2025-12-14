@@ -9,7 +9,7 @@
 
 MedGraphRAG is an AI-powered clinical decision support system that provides personalized medication safety analysis. Unlike traditional drug lookup tools that give identical warnings to everyone, MedGraphRAG considers patient-specific factors like age, kidney function, liver function, and current medications to generate personalized risk assessments.
 
-🌐 **[Live Demo](https://pranavkharat.github.io/medgraphrag/)** | 📄 **[Documentation](./DOCUMENTATION.pdf)** | 🎥 **[Video Demo](#demo-video)**
+🌐 **[Live Demo](https://pranavkharat.github.io/medgraphrag/)** | 📄 **[Documentation](./MedGraphRAG_Documentation.pdf)** | 🎥 **[Video Demo](#demo-video)**
 
 ---
 
